@@ -24,6 +24,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -38,12 +39,14 @@ public class Main {
 	public static JFrame settings;
 	public static boolean isMandelbrot = true;
 	public static JRadioButton mandel;
+	public static JCheckBox axes;
 	public static JTextField zfunc;
 	public static JTextField inputX;
 	public static JTextField inputY;
 	public static JTextField inputZoom;
 	public static double juliaR = 0.0;
 	public static double juliaI = 0.0;
+	public static Color axeColor = Color.WHITE;
 	
 	//public static long TORTURETIME;
 	public static int MAXN = 100, ZOOMSPEED = 10, scrW = 1000, scrH = 1000;
@@ -93,7 +96,7 @@ public class Main {
 			
 			@Override
 			public void componentResized(ComponentEvent e) {
-				s.setSize(f.getSize());
+				s.setSize(f.getContentPane().getSize());
 				
 				s.zx = s.zx * s.getWidth() / s.w;
 				s.zy = s.zy * s.getHeight() / s.h;
@@ -210,6 +213,15 @@ public class Main {
 		c.gridy = 3;
 		settings.add(inputZoom, c);
 		
+		axes = new JCheckBox("Axes");
+		axes.addActionListener(new Clicked());
+		
+		c.gridx = 0;
+		c.gridy = 4;
+		settings.add(axes, c);
+		
+		
+		
 		settings.pack();
 		
 		
@@ -273,16 +285,13 @@ public class Main {
 		}
 		@Override
 		public void paintComponent(Graphics g){
-			zfunc.setText((String.valueOf(juliaR) + "+" + String.valueOf(juliaI) + "i").replace("\\+-", "\\-"));
+			String f = (String.valueOf(juliaR) + "+" + String.valueOf(juliaI) + "i").replace("+-", "-");
+			zfunc.setText(f);
 			inputX.setText(String.valueOf(x1));
 			inputY.setText(String.valueOf(y1));
 			inputZoom.setText(String.valueOf(zx));
 			
 			this.g = g;
-			
-			
-			
-			
 			
 			//TORTURETIME = System.currentTimeMillis();/*tests*/
 			//for(int eta = 0; eta < 50; eta++)
@@ -359,7 +368,27 @@ public class Main {
 			}
 			//System.out.println(System.currentTimeMillis() - TORTURETIME);
 			
+			//Axes
+			if(axes.isSelected()){
+				int AxeX = (int) Math.min(Math.max((zx/2-x1)*w/zx, 0), w-1);
+				int AxeY = (int) Math.min(Math.max((zy/2-y1)*h/zy, 0), h-1);
+				
+				System.out.println(AxeX);
+				System.out.println(AxeY);
+				
+				g.setColor(axeColor);
+				g.drawLine(AxeX, 0, AxeX, h);
+				g.drawLine(0, AxeY, w, AxeY);
+				
+				// x1 is center of window in r line
+				// y1 is center of window in i line
+				
+				
+				
+			}
 		}
+		
+		
 	}
 	public static class Complex{
 		public double r, i;
