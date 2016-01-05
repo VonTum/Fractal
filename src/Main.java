@@ -370,21 +370,47 @@ public class Main {
 			
 			//Axes
 			if(axes.isSelected()){
-				int AxeX = (int) Math.min(Math.max((zx/2-x1)*w/zx, 0), w-1);
-				int AxeY = (int) Math.min(Math.max((zy/2-y1)*h/zy, 0), h-1);
+				double scale = Math.pow(10, Math.round(Math.log10(zx)))/10;
+				System.out.println("Scale: " + scale);
 				
-				System.out.println(AxeX);
+				int AxeY = (int) Math.min(Math.max((zx/2-x1)*w/zx, 0), w-1);
+				int AxeX = (int) Math.min(Math.max((zy/2-y1)*h/zy, 0), h-1);
+				
 				System.out.println(AxeY);
+				System.out.println(AxeX);
 				
 				g.setColor(axeColor);
-				g.drawLine(AxeX, 0, AxeX, h);
-				g.drawLine(0, AxeY, w, AxeY);
+				g.drawLine(AxeY, 0, AxeY, h);
+				g.drawLine(0, AxeX, w, AxeX);
 				
 				// x1 is center of window in r line
 				// y1 is center of window in i line
 				
+				double firstNumX = Math.floor((x1-zx/2)/scale)*scale;
+				double firstNumY = Math.floor((y1-zy/2)/scale)*scale;
+				System.out.println("FirsnumX: " + firstNumX + "   FirstNumY: " + firstNumY);
+				
+				//(cr-x1+zx/2)*w/zx;
+				System.out.println("X-coord: " +  ((firstNumX+scale-x1+zx/2)*w/zx));
 				
 				
+				double NumX = firstNumX;
+				while((NumX-x1+zx/2)*w/zx < w){
+					NumX += scale;
+					g.drawLine((int) ((NumX-x1+zx/2)*w/zx), AxeX-3, (int) ((NumX-x1+zx/2)*w/zx), AxeX+2);
+					if(Math.abs(NumX) < 1e-8)
+						g.drawString("0", (int) ((NumX-x1+zx/2)*w/zx)-10, AxeX-5);
+					else
+						g.drawString(String.format("%1$,." + (int) -Math.log10(scale) + "f", NumX), (int) ((NumX-x1+zx/2)*w/zx)-10, AxeX-5);
+				}
+				
+				double NumY = firstNumY;
+				while((NumY-y1+zy/2)*h/zy < h){
+					NumY += scale;
+					g.drawLine(AxeY-3, (int) ((NumY-y1+zy/2)*h/zy), AxeY+2, (int) ((NumY-y1+zy/2)*h/zy));
+					if(Math.abs(NumY) < 1e-8){continue;}
+					g.drawString(String.format("%1$,." + (int) -Math.log10(scale) + "f", NumY), AxeY+7, (int) ((NumY-y1+zy/2)*h/zy)+5);
+				}
 			}
 		}
 		
