@@ -153,21 +153,14 @@ public class Main {
 		GridBagConstraints c = new GridBagConstraints();
 		
 		ButtonGroup type = new ButtonGroup();
-		mandel = new JRadioButton();
+		mandel = new JRadioButton("Mandelbrot");
 		mandel.addActionListener(new Clicked());
 		mandel.setSelected(true);
-		mandel.setName("MandelButton");
-		JRadioButton julia = new JRadioButton();
+		JRadioButton julia = new JRadioButton("Julia");
 		julia.addActionListener(new Clicked());
 		type.add(mandel);
 		type.add(julia);
 		
-		c.gridx = 0;
-		c.gridy = 0;
-		settings.add(new JLabel("Mandelbrot"), c);
-		c.gridx = 0;
-		c.gridy = 1;
-		settings.add(new JLabel("Julia"), c);
 		c.gridx = 1;
 		c.gridy = 0;
 		settings.add(mandel, c);
